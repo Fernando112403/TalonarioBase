@@ -1,6 +1,8 @@
 package TalonarioConsola.model;
 
-public class Talonario {
+import TalonarioConsola.services.TalonarioServiceImpl;
+
+public class Talonario extends TalonarioServiceImpl {
 
 	int id;
 	String Carnet;

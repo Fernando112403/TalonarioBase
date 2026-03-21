@@ -2,6 +2,7 @@ package TalonarioConsola.services;
 
 
 import java.util.LinkedList;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -16,12 +17,12 @@ public class TalonarioServiceImpl implements ITalonarioservice {
 	@Override
 	public boolean guardar(Talonario talonario) {
 	boolean hecho=false;
-	Conexion conexion = new Conexion();
+	Conexion Conexion = new Conexion();
 		Connection con=null;
 		PreparedStatement ps;
-		String sql ="INSERT INTO estudiante(carnet,nombres,apellidos)values(?,?,?)";
+		String sql ="INSERT INTO talonario(carnet,Descripcion,Fecha,Estado)values(?,?,?,?)";
 		try {
-			con = conexion.getConexion();
+			con = Conexion.getConexion();
 			ps = con.prepareStatement(sql);
 			ps.setString(1,talonario.getCarnet());
 			ps.setString(2,talonario.getDescripcion());
@@ -29,12 +30,12 @@ public class TalonarioServiceImpl implements ITalonarioservice {
 			ps.setString(4,talonario.getEstado());
 			ps.execute();
 			hecho=true;			
-		} catch (SQLExeption e) {
+		} catch (SQLException e) {
 			System.out.print(e);
 			}		finally {
 				try {
 					con.close();
-				} catch (SQLExeption e) {
+				} catch (SQLException e) {
 					// Todo Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -56,13 +57,49 @@ public class TalonarioServiceImpl implements ITalonarioservice {
 	@Override
 	public Talonario modificar(Talonario talonario) {
 		// TODO Auto-generated method stub
-		return null;
+		Conexion conexion = new Conexion();
+	    Connection con = null;
+	    PreparedStatement ps = null;
+		
+	    String sql = "UPDATE talonario SET carnet=?, descripcion=?, fecha=?, estado=? WHERE id=?";
+
+	    try {
+	        con = conexion.getConexion();
+	        ps = con.prepareStatement(sql);
+
+	        ps.setString(1, talonario.getCarnet());
+	        ps.setString(2, talonario.getDescripcion());
+	        ps.setString(3, talonario.getFecha());
+	        ps.setString(4, talonario.getEstado());
+	        ps.setInt(5, talonario.getId()); // 🔥 IMPORTANTE
+
+	        int filas = ps.executeUpdate();
+	        if (filas > 0) {
+	            System.out.println("Registro actualizado correctamente");
+	        } else {
+	            System.out.println("No se encontró el registro");
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Error al modificar: " + e.getMessage());
+	    } finally {
+	        try {
+	            if (ps != null) ps.close();
+	            if (con != null) con.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }	
+		return talonario;
 	}
 
 	@Override
 	public boolean eliminar(Talonario talonario) {
 		// TODO Auto-generated method stub
-		return false;
+		
+		
+		
+		return talonario;
 	}
 
 
@@ -74,7 +111,7 @@ public class TalonarioServiceImpl implements ITalonarioservice {
 		// TODO Auto-generated method stub
 		Talonario tal = new Talonario();
 		
-		return tal;
+		return null;
 	}
 
 	
