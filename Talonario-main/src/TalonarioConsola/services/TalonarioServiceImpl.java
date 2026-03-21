@@ -96,15 +96,41 @@ public class TalonarioServiceImpl implements ITalonarioservice {
 	@Override
 	public boolean eliminar(Talonario talonario) {
 		// TODO Auto-generated method stub
-		
-		
-		
-		return talonario;
+		boolean eliminado = false;
+	    Conexion conexion = new Conexion();
+	    Connection con = null;
+	    PreparedStatement ps = null;
+
+	    String sql = "DELETE FROM talonario WHERE id = ?";
+	    
+	    try {
+	        con = conexion.getConexion();
+	        ps = con.prepareStatement(sql);
+
+	        ps.setInt(1, talonario.getId()); // 🔥 clave
+
+	        int filas = ps.executeUpdate();
+
+	        if (filas > 0) {
+	            System.out.println("Registro eliminado correctamente");
+	            eliminado = true;
+	        } else {
+	            System.out.println("No se encontró el registro");
+	        }	
+	        
+	    } catch (SQLException e) {
+	        System.out.println("Error al eliminar: " + e.getMessage());
+	    } finally {
+	        try {
+	            if (ps != null) ps.close();
+	            if (con != null) con.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return eliminado;
 	}
-
-
-
-
 
 	@Override
 	public List<Talonario> recuperarTalonarios() {
