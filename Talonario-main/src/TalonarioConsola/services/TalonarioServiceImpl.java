@@ -2,7 +2,7 @@ package TalonarioConsola.services;
 
 
 import java.util.LinkedList;
-
+import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -48,10 +48,46 @@ public class TalonarioServiceImpl implements ITalonarioservice {
 	@Override
 	public Talonario recuperar(Talonario talonario) {
 		// TODO Auto-generated method stub
+		Conexion conexion = new Conexion();
+	    Connection con = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
 		
-		Talonario tal = new Talonario();
-		
-		return tal;
+	    Talonario tal = null;
+	    String sql = "SELECT * FROM talonario WHERE carnet = ?";
+
+	    try {
+	        con = conexion.getConexion();
+	        ps = con.prepareStatement(sql);
+
+	        ps.setString(1, talonario.getCarnet());
+
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            tal = new Talonario();
+	            tal.setId(rs.getInt("id"));
+	            tal.setCarnet(rs.getString("carnet"));
+	            tal.setDescripcion(rs.getString("descripcion"));
+	            tal.setFecha(rs.getString("fecha"));
+	            tal.setEstado(rs.getString("estado"));
+	        } else {
+	            System.out.println("No existe talonario con ese carnet");
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Error al recuperar: " + e.getMessage());
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (ps != null) ps.close();
+	            if (con != null) con.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return tal;
 	}
 
 	@Override
@@ -71,7 +107,7 @@ public class TalonarioServiceImpl implements ITalonarioservice {
 	        ps.setString(2, talonario.getDescripcion());
 	        ps.setString(3, talonario.getFecha());
 	        ps.setString(4, talonario.getEstado());
-	        ps.setInt(5, talonario.getId()); // 🔥 IMPORTANTE
+	        ps.setInt(5, talonario.getId()); 
 
 	        int filas = ps.executeUpdate();
 	        if (filas > 0) {
@@ -107,7 +143,7 @@ public class TalonarioServiceImpl implements ITalonarioservice {
 	        con = conexion.getConexion();
 	        ps = con.prepareStatement(sql);
 
-	        ps.setInt(1, talonario.getId()); // 🔥 clave
+	        ps.setInt(1, talonario.getId()); // 
 
 	        int filas = ps.executeUpdate();
 

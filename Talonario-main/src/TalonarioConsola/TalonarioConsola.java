@@ -16,7 +16,7 @@ public static void main (String[] args) {
 	talonario.setDescripcion("Matricula,Cuota 1");
 	talonario.setFecha("11-01-2026");
 	talonario.setEstado("a");
-	talonario.guardar(talonario);
+	talonario.recuperar(talonario);
 	
 	
    }
